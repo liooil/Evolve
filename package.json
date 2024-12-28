@@ -4,13 +4,9 @@
   "description": "Evolve Idle",
   "private": true,
   "scripts": {
-    "build": "bun run evolve && bun run evolve-less && bun run wiki && bun run wiki-less && bun run copy",
+    "build": "bun run build.js && bun run copy",
     "build-debug": "bun run evolve-debug && bun run evolve-less && bun run wiki-debug && bun run wiki-less && bun run copy",
-    "evolve": "bun buildEvolve.js",
-    "evolve-debug": "bun buildEvolveDebug.js",
     "evolve-less": "lessc src/evolve.less evolve/evolve-unminified.css && csso -i evolve/evolve-unminified.css -o evolve/evolve.css && rm evolve/evolve-unminified.css",
-    "wiki": "bun buildWiki.js",
-    "wiki-debug": "bun buildWikiDebug.js",
     "wiki-less": "lessc src/wiki/wiki.less wiki/wiki-unminified.css && csso -i wiki/wiki-unminified.css -o wiki/wiki.css && rm wiki/wiki-unminified.css",
     "serve": "servehere -c",
     "copy": "rm -rf ./dist/ && mkdir ./dist/ && cp -r *.html *.ico LICENSE evolve lib font strings wiki ./dist/",
@@ -30,11 +26,13 @@
   },
   "homepage": "https://github.com/pmotschmann/Evolve#readme",
   "devDependencies": {
+    "bun-types": "^1.1.42",
     "csso-cli": "^4.0.2",
+    "esbuild-plugin-less": "^1.3.14",
+    "gh-pages": "^6.1.1",
     "ini": "^1.3.8",
     "less": "^3.13.0",
-    "servehere": "^1.7.0",
-    "gh-pages": "^6.1.1"
+    "servehere": "^1.7.0"
   },
   "dependencies": {
     "esbuild": "0.17.19"

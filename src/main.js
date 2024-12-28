@@ -777,7 +777,7 @@ set_qlevel(calcQuantumLevel(true));
 
 $('#lbl_city').html('Village');
 
-if (window.Worker){
+if (false){
     webWorker.w = new Worker("evolve/evolve.js");
     webWorker.w.addEventListener('message', function(e){
         var data = e.data;
@@ -800,7 +800,7 @@ resourceAlt();
 
 var firstRun = true;
 var gene_sequence = global.arpa['sequence'] && global.arpa['sequence']['on'] ? global.arpa.sequence.on : 0;
-function fastLoop(){
+export function fastLoop(){
     if (!global.race['no_craft']){
         $('.craft').each(function(e){
             if (typeof $(this).data('val') === 'number'){
@@ -7755,7 +7755,7 @@ function fastLoop(){
     firstRun = false;
 }
 
-function midLoop(){
+export function midLoop(){
     const astroSign = astrologySign();
     if (global.race.species === 'protoplasm'){
         let base = 100;
@@ -10833,7 +10833,7 @@ let sythMap = {
 };
 
 var kplv = 60;
-function longLoop(){
+export function longLoop(){
     const date = new Date();
     const astroSign = astrologySign();
     if (global.race.species !== 'protoplasm'){

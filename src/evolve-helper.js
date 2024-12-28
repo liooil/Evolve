@@ -21,6 +21,8 @@ function scan() {
       clearInterval(saveTimer);
       saveTimer = setInterval(save, val);
     });
+    menuBtn(versionLogEl, "speed", "int", 16, (val) => {
+    });
     menuBtn(versionLogEl, "autoRun", "bool", true, (val) => {
         if (val) {
             autoTimer = setInterval(auto, getInt("autoInterval") ?? 100);

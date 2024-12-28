@@ -11,6 +11,7 @@ import { govEffect } from './civics.js';
 import { universeLevel, universeAffix, alevel } from './achieve.js';
 import { astrologySign, astroVal } from './seasons.js';
 import { shipCosts, TPShipDesc } from './truepath.js';
+import { fastLoop, midLoop, longLoop } from "./main.js";
 
 var popperRef = false;
 export function popover(id,content,opts){
@@ -140,15 +141,16 @@ export function gameLoop(act){
                     webWorker.w.postMessage({ loop: 'long', period: timers.longTimer });
                 }
                 else {
+                    const speed = parseFloat(localStorage.getItem('speed') || '1');
                     intervals['main_loop'] = setInterval(function(){
                         fastLoop();
-                    }, timers.mainTimer);
+                    }, timers.mainTimer / speed);
                     intervals['mid_loop'] = setInterval(function(){
                         midLoop();
-                    }, timers.midTimer);
+                    }, timers.midTimer / speed);
                     intervals['long_loop'] = setInterval(function(){
                         longLoop();
-                    }, timers.longTimer);
+                    }, timers.longTimer / speed);
                 }
 
                 webWorker.s = true;
