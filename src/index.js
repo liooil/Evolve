@@ -126,6 +126,24 @@ export function mainVue(){
                     }
                 });
             },
+            async saveExportCloud() {
+                const cloudURL = document.getElementById('cloudURL').value;
+                await fetch(cloudURL, { method: 'POST', body: window.exportGame(), headers: { 'Content-Type': 'text/plain' } });
+                alert('saved to: ' + cloudURL);
+            },
+            async loadExportCloud() {
+                const cloudURL = document.getElementById('cloudURL').value;
+                const res = await fetch(cloudURL);
+                if (!res.ok) return;
+                const saves = await res.json();
+                const savePrompts = saves.map((s) => `${s.id}: ${new Date(s.date)}`).join('\n');
+                const idStr = prompt('select saves from:\n' + savePrompts, saves[saves.length - 1]?.id);
+                if (idStr === null) return;
+                const id = parseInt(idStr);
+                const data = saves.find((s) => s.id === id)?.data;
+                alert('load from: ' + data.slice(0, 100) + '...');
+                if (data) importGame(data);
+            },
             lChange(locale){
                 global.settings.locale = locale;
                 global.queue.rename = true;
@@ -1426,11 +1444,14 @@ export function index(){
         <div class="importExport">
             <b-field label="${loc('import_export')}">
                 <b-input id="importExport" type="textarea"></b-input>
+                <b-input id="cloudURL" type="input"></b-input>
             </b-field>
             <button class="button" @click="saveImport">{{ 'import' | label }}</button>
             <button class="button" @click="saveExport">{{ 'export' | label }}</button>
             <button class="button" @click="saveExportFile">{{ 'export_file' | label }}</button>
+            <button class="button" @click="saveExportCloud">{{ 'export_cloud' | label }}</button>
             <button class="button right" @click="restoreGame"><span class="settings9" aria-label="${loc('settings9')}">{{ 'restore' | label }}</span></button>
+            <button class="button right" @click="loadExportCloud"><span class="settings9" aria-label="${loc('settings9')}">{{ 'restore_cloud' | label }}</span></button>
         </div>
         <div class="reset">
             <b-collapse :open="false">
