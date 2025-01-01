@@ -24,8 +24,15 @@ export function evoHelper() {
         saveTimer = setInterval(save, val);
       });
       menuBtn(versionLogEl, "speed", "int", 16);
-      menuBtn(versionLogEl, "name", "str", "", () => void 0, () => {
-
+      menuBtn(versionLogEl, "name", "str", "", () => void 0, async () => {
+        const res = await fetch(`https://evolve-api.xiteng.site/`);
+        if (res.ok) {
+          /** @type {{ name: string, count: number }[]} */
+          const data = await res.json();
+          return data.map((v) => `${v.name} has ${v.count} saves`);
+        } else {
+          return [];
+        }
       });
       menuBtn(versionLogEl, "autoRun", "bool", true, (val) => {
         if (val) {
@@ -66,15 +73,6 @@ export function evoHelper() {
     for (const node of document.getElementById('espModal')?.querySelectorAll('button.button.gap') ?? []) {
       if (['influence', 'sabotage', 'incite'].includes(node.dataset.esp)) {
         autoBtn(node, node, 'gov-s_' + node.dataset.esp);
-      }
-    }
-    const cloudURLEl = document.getElementById('cloudURL');
-    if (cloudURLEl) {
-      if (cloudURLEl.value) {
-        localStorage.setItem('cloudURL', cloudURLEl.value);
-      } else {
-        const cloudURL = localStorage.getItem('cloudURL');
-        if (cloudURL) cloudURLEl.value = cloudURL;
       }
     }
   }

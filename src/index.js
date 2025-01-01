@@ -129,7 +129,17 @@ export function mainVue(){
             async saveExportCloud() {
                 const name = localStorage.getItem('name');
                 if (!name) return;
-                const res = await fetch(`https://evolve-api.xiteng.site/${name}`, { method: 'POST', body: window.exportGame(), headers: { 'Content-Type': 'text/plain' } });
+                const res = await fetch(`https://evolve-api.xiteng.site/${name}`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        data: window.exportGame(),
+                        autoIds: localStorage.getItem('autoIds'),
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                });
                 if (res.ok) {
                     alert('saved success: ' + await res.json());
                 } else {
@@ -142,13 +152,15 @@ export function mainVue(){
                 const res = await fetch(`https://evolve-api.xiteng.site/${name}`);
                 if (!res.ok) return;
                 const saves = await res.json();
-                const savePrompts = saves.map((s, i) => `${i}: ${new Date(s.date)}`).slice(-16).join('\n');
+                const savePrompts = saves.map((s, i) => `${i}: ${new Date(s.created_at)}`).slice(-16).join('\n');
                 const idStr = prompt('select saves from:\n' + savePrompts, saves.length - 1);
                 if (idStr === null) return;
                 const id = parseInt(idStr);
                 const data = saves[id]?.data;
                 alert('load from: ' + data.slice(0, 100) + '...');
                 if (data) importGame(data);
+                const autoIds = saves[id]?.autoIds;
+                if (autoIds) localStorage.setItem('autoIds', autoIds);
             },
             lChange(locale){
                 global.settings.locale = locale;
@@ -1450,7 +1462,6 @@ export function index(){
         <div class="importExport">
             <b-field label="${loc('import_export')}">
                 <b-input id="importExport" type="textarea"></b-input>
-                <b-input id="cloudURL" type="input"></b-input>
             </b-field>
             <button class="button" @click="saveImport">{{ 'import' | label }}</button>
             <button class="button" @click="saveExport">{{ 'export' | label }}</button>
