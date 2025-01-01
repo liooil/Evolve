@@ -115,10 +115,21 @@ export function evoHelper() {
     }
   }
 
-  function save() {
-    const cloudURL = localStorage.getItem('cloudURL');
-    if (!cloudURL) return;
-    fetch(cloudURL, { method: 'POST', body: window.exportGame(), headers: { 'Content-Type': 'text/plain' } });
+  async function save() {
+    const name = localStorage.getItem('name');
+    if (!name) return;
+    const res = await fetch(`https://evolve-api.xiteng.site/${name}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        data: window.exportGame(),
+        autoIds: localStorage.getItem('autoIds'),
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    console.log(res);
   }
 
   /**
