@@ -127,20 +127,26 @@ export function mainVue(){
                 });
             },
             async saveExportCloud() {
-                const cloudURL = document.getElementById('cloudURL').value;
-                await fetch(cloudURL, { method: 'POST', body: window.exportGame(), headers: { 'Content-Type': 'text/plain' } });
-                alert('saved to: ' + cloudURL);
+                const name = localStorage.getItem('name');
+                if (!name) return;
+                const res = await fetch(`https://evolve-api.xiteng.site/${name}`, { method: 'POST', body: window.exportGame(), headers: { 'Content-Type': 'text/plain' } });
+                if (res.ok) {
+                    alert('saved success: ' + await res.json());
+                } else {
+                    alert('saved failed: ' + res.status);
+                }
             },
             async loadExportCloud() {
-                const cloudURL = document.getElementById('cloudURL').value;
-                const res = await fetch(cloudURL);
+                const name = localStorage.getItem('name');
+                if (!name) return;
+                const res = await fetch(`https://evolve-api.xiteng.site/${name}`);
                 if (!res.ok) return;
                 const saves = await res.json();
-                const savePrompts = saves.map((s) => `${s.id}: ${new Date(s.date)}`).join('\n');
-                const idStr = prompt('select saves from:\n' + savePrompts, saves[saves.length - 1]?.id);
+                const savePrompts = saves.map((s, i) => `${i}: ${new Date(s.date)}`).slice(-16).join('\n');
+                const idStr = prompt('select saves from:\n' + savePrompts, saves.length - 1);
                 if (idStr === null) return;
                 const id = parseInt(idStr);
-                const data = saves.find((s) => s.id === id)?.data;
+                const data = saves[id]?.data;
                 alert('load from: ' + data.slice(0, 100) + '...');
                 if (data) importGame(data);
             },

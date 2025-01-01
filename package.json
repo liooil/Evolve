@@ -9,7 +9,7 @@
     "evolve-less": "lessc src/evolve.less evolve/evolve-unminified.css && csso -i evolve/evolve-unminified.css -o evolve/evolve.css && rm evolve/evolve-unminified.css",
     "wiki-less": "lessc src/wiki/wiki.less wiki/wiki-unminified.css && csso -i wiki/wiki-unminified.css -o wiki/wiki.css && rm wiki/wiki-unminified.css",
     "serve": "servehere -c",
-    "copy": "rm -rf ./dist/ && mkdir ./dist/ && cp -r *.html *.ico LICENSE evolve lib font strings wiki ./dist/",
+    "copy": "cp -r *.html *.ico LICENSE evolve lib font strings wiki ./dist/",
     "deploy": "rsync -avP ./dist/ /app/Evolve/"
   },
   "repository": {
