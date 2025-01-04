@@ -1,4 +1,4 @@
-export function onRequestGet(ctx) {
+export async function onRequestGet(ctx) {
   const user = ctx.params.user;
   const db = ctx.env.DATABASE;
   const res = await DATABASE.prepare("SELECT * FROM evolve WHERE name = ?")
