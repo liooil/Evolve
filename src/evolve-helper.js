@@ -25,7 +25,7 @@ export function evoHelper() {
       });
       menuBtn(versionLogEl, "speed", "int", 16);
       menuBtn(versionLogEl, "name", "str", "", () => void 0, async () => {
-        const res = await fetch(`https://evolve-api.xiteng.site/`);
+        const res = await fetch(`/saves/`);
         if (res.ok) {
           /** @type {{ name: string, count: number }[]} */
           const data = await res.json();
@@ -118,7 +118,7 @@ export function evoHelper() {
   async function save() {
     const name = localStorage.getItem('name');
     if (!name) return;
-    const res = await fetch(`https://evolve-api.xiteng.site/${name}`, {
+    const res = await fetch(`/saves/${name}`, {
       method: 'POST',
       body: JSON.stringify({
         data: window.exportGame(),

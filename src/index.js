@@ -129,7 +129,7 @@ export function mainVue(){
             async saveExportCloud() {
                 const name = localStorage.getItem('name');
                 if (!name) return;
-                const res = await fetch(`https://evolve-api.xiteng.site/${name}`, {
+                const res = await fetch(`/saves/${name}`, {
                     method: 'POST',
                     body: JSON.stringify({
                         data: window.exportGame(),
@@ -149,7 +149,7 @@ export function mainVue(){
             async loadExportCloud() {
                 const name = localStorage.getItem('name');
                 if (!name) return;
-                const res = await fetch(`https://evolve-api.xiteng.site/${name}`);
+                const res = await fetch(`/saves/${name}`);
                 if (!res.ok) return;
                 const saves = await res.json();
                 const savePrompts = saves.map((s, i) => `${i}: ${new Date(s.created_at)}`).slice(-16).join('\n');
