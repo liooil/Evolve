@@ -25,7 +25,7 @@ export function evoHelper() {
       });
       menuBtn(versionLogEl, "speed", "int", 16);
       menuBtn(versionLogEl, "name", "str", "", () => void 0, async () => {
-        const res = await fetch(`/saves/`);
+        const res = await fetch(`/saves`);
         if (res.ok) {
           /** @type {{ name: string, count: number }[]} */
           const data = await res.json();
