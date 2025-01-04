@@ -6259,7 +6259,7 @@ export function setAction(c_action,action,type,old,prediction){
     });
 }
 
-function runAction(c_action,action,type){
+export function runAction(c_action,action,type){
     if (c_action.id === 'spcdock-launch_ship'){
         c_action.action();
     }

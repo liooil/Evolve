@@ -1,4 +1,5 @@
 import { govCivics } from './civics.js';
+import { actions, runAction } from './actions.js';
 
 // Evolve Helper
 export function evoHelper() {
@@ -104,14 +105,17 @@ export function evoHelper() {
         }
         continue;
       }
+      const [action, type] = id.split('-');
+      const c_action = actions[action][type];
+      if (c_action) {
+        runAction(c_action, action, type);
+        continue;
+      }
       const el = document.getElementById(id);
       if (!el || el.classList.contains("cna")) continue;
       /** @type {HTMLElement} */
       const a = el.querySelector("a.button,a:has(span[data-val='A'])");
-      if (a) {
-        a.click();
-        break;
-      }
+      a?.click();
     }
   }
 
@@ -129,7 +133,6 @@ export function evoHelper() {
         'Content-Type': 'application/json',
       }
     });
-    console.log(res);
   }
 
   /**
