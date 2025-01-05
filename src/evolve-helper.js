@@ -1,5 +1,5 @@
 import { govCivics } from './civics.js';
-import { actions, runAction } from './actions.js';
+import { actions, runAction, checkTechQualifications } from './actions.js';
 
 // Evolve Helper
 export function evoHelper() {
@@ -108,7 +108,9 @@ export function evoHelper() {
       const [action, type] = id.split('-');
       const c_action = actions[action][type];
       if (c_action) {
-        runAction(c_action, action, type);
+        if (checkTechQualifications(c_action, type)) {
+          runAction(c_action, action, type);
+        }
         continue;
       }
       const el = document.getElementById(id);
