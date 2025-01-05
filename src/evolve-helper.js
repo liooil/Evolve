@@ -53,6 +53,7 @@ export function evoHelper() {
           setStrSet('autoIds', autoIds);
         }
       });
+      menuBtn(versionLogEl, "autoHidden", "bool", false);
     }
     for (const node of document.querySelectorAll("div.action.vb")) {
       if (node.id.startsWith("tech-")) continue;
@@ -107,7 +108,7 @@ export function evoHelper() {
       }
       const [action, type] = id.split('-');
       const c_action = actions[action][type];
-      if (c_action) {
+      if (localStorage.getItem("autoHidden") && c_action) {
         if (checkTechQualifications(c_action, type)) {
           runAction(c_action, action, type);
         }
