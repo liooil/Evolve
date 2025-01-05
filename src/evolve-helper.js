@@ -107,12 +107,14 @@ export function evoHelper() {
         continue;
       }
       const [action, type] = id.split('-');
-      const c_action = actions[action][type];
-      if (localStorage.getItem("autoHidden") && c_action) {
-        if (checkTechQualifications(c_action, type)) {
-          runAction(c_action, action, type);
+      if (action && type) {
+        const c_action = actions[action][type];
+        if (localStorage.getItem("autoHidden") && c_action) {
+          if (checkTechQualifications(c_action, type)) {
+            runAction(c_action, action, type);
+          }
+          continue;
         }
-        continue;
       }
       const el = document.getElementById(id);
       if (!el || el.classList.contains("cna")) continue;

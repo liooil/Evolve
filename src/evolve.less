@@ -2432,6 +2432,9 @@ a {
     overflow-y: hidden;
 
     .leftColumn {
+        @media only screen and (max-width: 48rem) {
+            display: none;
+        }
         height: ~"calc(100vh - 2.45rem)";
 
         .colHeader {
