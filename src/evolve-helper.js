@@ -72,9 +72,12 @@ export function evoHelper() {
         autoBtn(span, span, node.id + '-' + type);
       }
     }
-    for (const node of document.getElementById('espModal')?.querySelectorAll('button.button.gap') ?? []) {
-      if (['influence', 'sabotage', 'incite'].includes(node.dataset.esp)) {
-        autoBtn(node, node, 'gov-s_' + node.dataset.esp);
+    for (const gov of [0, 1, 2]) {
+      const id = `gov${gov}`;
+      const el = document.getElementById(id);
+      if (!el) continue;
+      for (const esp of ['influence', 'sabotage', 'incite']) {
+        autoBtn(el, el, `gov-${gov}_${esp}`);
       }
     }
   }
@@ -100,10 +103,11 @@ export function evoHelper() {
       }
       if (id.startsWith('gov-')) {
         const f = id.slice('gov-'.length);
-        for (let i = 0; i < 3; ++i) {
-          govCivics('t_spy', i);
-          govCivics(f, i);
-        }
+        if (f.startsWith("s_")) continue;
+        const [istr, esp] = f.split("_");
+        const i = parseInt(istr);
+        govCivics('t_spy', i);
+        govCivics('s_' + esp, i);
         continue;
       }
       const [action, type] = id.split('-');
@@ -122,82 +126,6 @@ export function evoHelper() {
       const a = el.querySelector("a.button,a:has(span[data-val='A'])");
       a?.click();
     }
-  }
-
-  async function save() {
-    const name = localStorage.getItem('name');
-    if (!name) return;
-    const res = await fetch(`/saves/${name}`, {
-      method: 'POST',
-      body: JSON.stringify({
-        data: window.exportGame(),
-        autoIds: localStorage.getItem('autoIds'),
-      }),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    });
-  }
-
-  /**
-   * @param {string} key
-   * @param {number} defaultVal
-   */
-  function useInt(key, defaultVal) {
-    let text = localStorage.getItem(key);
-    let val = text ? parseInt(text) : defaultVal;
-    return [
-      () => val,
-      /** @type {(val: number) => void} */
-      (v) => {
-        val = v;
-        localStorage.setItem(key, v.toString());
-      }
-    ];
-  }
-
-  /**
-   * @param {string} key
-   */
-  function getInt(key) {
-    const val = localStorage.getItem(key);
-    if (val !== null) return parseFloat(val);
-  }
-  /**
-   * @param {string} key
-   * @param {number} val
-   */
-  function setInt(key, val) {
-    localStorage.setItem(key, val)
-  }
-  /**
-   * @param {string} key
-   */
-  function getStrSet(key) {
-    const val = localStorage.getItem(key);
-    if (val !== null) return new Set(val.split(","));
-  }
-  /**
-   * @param {string} key
-   * @param {Set<string>} val
-   */
-  function setStrSet(key, val) {
-    localStorage.setItem(key, [...val.keys()].join(","))
-  }
-  /**
-   * @param {string} key
-   */
-  function getBool(key) {
-    const val = localStorage.getItem(key);
-    if (val !== null) return val === "true";
-  }
-  /**
-   * @param {string} key
-   * @param {boolean} val
-   */
-  function setBool(key, val) {
-    localStorage.setItem(key, val.toString());
   }
 
   /**
@@ -279,3 +207,80 @@ export function evoHelper() {
     }
   }
 }
+
+async function save() {
+  const name = localStorage.getItem('name');
+  if (!name) return;
+  const res = await fetch(`/saves/${name}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      data: window.exportGame(),
+      autoIds: localStorage.getItem('autoIds'),
+    }),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  });
+}
+
+/**
+  * @param {string} key
+  * @param {number} defaultVal
+  */
+function useInt(key, defaultVal) {
+  let text = localStorage.getItem(key);
+  let val = text ? parseInt(text) : defaultVal;
+  return [
+    () => val,
+    /** @type {(val: number) => void} */
+    (v) => {
+      val = v;
+      localStorage.setItem(key, v.toString());
+    }
+  ];
+}
+
+/**
+  * @param {string} key
+  */
+function getInt(key) {
+  const val = localStorage.getItem(key);
+  if (val !== null) return parseFloat(val);
+}
+/**
+  * @param {string} key
+  * @param {number} val
+  */
+function setInt(key, val) {
+  localStorage.setItem(key, val)
+}
+/**
+  * @param {string} key
+  */
+function getStrSet(key) {
+  const val = localStorage.getItem(key);
+  if (val !== null) return new Set(val.split(","));
+}
+/**
+  * @param {string} key
+  * @param {Set<string>} val
+  */
+function setStrSet(key, val) {
+  localStorage.setItem(key, [...val.keys()].join(","))
+}
+/**
+  * @param {string} key
+  */
+function getBool(key) {
+  const val = localStorage.getItem(key);
+  if (val !== null) return val === "true";
+}
+/**
+  * @param {string} key
+  * @param {boolean} val
+  */
+function setBool(key, val) {
+  localStorage.setItem(key, val.toString());
+}
+
