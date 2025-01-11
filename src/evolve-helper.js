@@ -77,7 +77,7 @@ export function evoHelper() {
       const el = document.getElementById(id);
       if (!el) continue;
       for (const esp of ['influence', 'sabotage', 'incite']) {
-        autoBtn(el, el, `gov-${gov}_${esp}`);
+        autoCBtn(el, gov, esp);
       }
     }
   }
@@ -187,6 +187,40 @@ export function evoHelper() {
       auto = parent.appendChild(document.createElement("span"));
       auto.classList.add("auto");
       auto.textContent = "A";
+      auto.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (autoIds.has(id)) {
+          autoIds.delete(id);
+          auto.style.color = "gray";
+        } else {
+          autoIds.add(id);
+          auto.style.color = "green";
+        }
+        setStrSet("autoIds", autoIds);
+      }
+    }
+    if (autoIds.has(id)) {
+      auto.style.color = "green";
+    } else {
+      auto.style.color = "gray";
+    }
+  }
+  /**
+   * add auto button
+   * @param {HTMLElement} root
+   * @param {number} id
+   * @param {string} esp ['influence', 'sabotage', 'incite']
+   */
+  function autoCBtn(root, id, esp) {
+    const id = `gov-${id}_${esp}`
+    /** @type {HTMLButtonElement} */
+    let auto = root.querySelector(`#${id}`);
+    if (!auto) {
+      auto = parent.appendChild(document.createElement("span"));
+      auto.id = id;
+      auto.classList.add("auto");
+      auto.textContent = esp;
       auto.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
