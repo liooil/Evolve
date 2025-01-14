@@ -217,7 +217,7 @@ export function evoHelper() {
     /** @type {HTMLButtonElement} */
     let auto = root.querySelector(`#${id}`);
     if (!auto) {
-      auto = parent.appendChild(document.createElement("span"));
+      auto = root.appendChild(document.createElement("span"));
       auto.id = id;
       auto.classList.add("auto");
       auto.textContent = esp;
@@ -245,7 +245,7 @@ export function evoHelper() {
 async function save() {
   const name = localStorage.getItem('name');
   if (!name) return;
-  const res = await fetch(`/saves/${name}`, {
+  await fetch(`/saves/${name}`, {
     method: 'POST',
     body: JSON.stringify({
       data: window.exportGame(),
