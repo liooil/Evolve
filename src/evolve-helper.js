@@ -209,11 +209,11 @@ export function evoHelper() {
   /**
    * add auto button
    * @param {HTMLElement} root
-   * @param {number} id
+   * @param {number} i
    * @param {string} esp ['influence', 'sabotage', 'incite']
    */
-  function autoCBtn(root, id, esp) {
-    const id = `gov-${id}_${esp}`
+  function autoCBtn(root, i, esp) {
+    const id = `gov-${i}_${esp}`
     /** @type {HTMLButtonElement} */
     let auto = root.querySelector(`#${id}`);
     if (!auto) {
