@@ -1,12 +1,6 @@
-import { govCivics } from './civics.js';
-import { actions, runAction, checkTechQualifications } from './actions.js';
-
 // Evolve Helper
 export function evoHelper() {
-  let autoIds = getStrSet("autoIds") ?? new Set();
-
   let scanTimer = setInterval(scan, getInt("scanInterval") ?? 1000);
-  let autoTimer = setInterval(auto, getInt("autoInterval") ?? 100);
   let saveTimer = setInterval(save, getInt("saveInterval") ?? 10 * 60 * 1000);
 
   function scan() {
@@ -15,10 +9,6 @@ export function evoHelper() {
       menuBtn(versionLogEl, "scanInterval", "int", 1000, (val) => {
         clearInterval(scanTimer);
         scanTimer = setInterval(scan, val);
-      });
-      menuBtn(versionLogEl, "autoInterval", "int", 100, (val) => {
-        clearInterval(autoTimer);
-        autoTimer = setInterval(scan, val);
       });
       menuBtn(versionLogEl, "saveInterval", "int", 10 * 60 * 1000, (val) => {
         clearInterval(saveTimer);
@@ -36,9 +26,6 @@ export function evoHelper() {
         }
       });
     }
-  }
-
-  function auto() {
   }
 
   /**
@@ -87,72 +74,6 @@ export function evoHelper() {
     nextElementSibling.before(el);
     return el;
   }
-
-  /**
-   * add auto button
-   * @param {HTMLElement} root
-   * @param {HTMLElement?} parent
-   */
-  function autoBtn(root, parent = root, id = root.id) {
-    /** @type {HTMLButtonElement} */
-    let auto = root.querySelector(".auto");
-    if (!auto) {
-      auto = parent.appendChild(document.createElement("span"));
-      auto.classList.add("auto");
-      auto.textContent = "A";
-      auto.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (autoIds.has(id)) {
-          autoIds.delete(id);
-          auto.style.color = "gray";
-        } else {
-          autoIds.add(id);
-          auto.style.color = "green";
-        }
-        setStrSet("autoIds", autoIds);
-      }
-    }
-    if (autoIds.has(id)) {
-      auto.style.color = "green";
-    } else {
-      auto.style.color = "gray";
-    }
-  }
-  /**
-   * add auto button
-   * @param {HTMLElement} root
-   * @param {number} i
-   * @param {string} esp ['influence', 'sabotage', 'incite']
-   */
-  function autoCBtn(root, i, esp) {
-    const id = `gov-${i}_${esp}`
-    /** @type {HTMLButtonElement} */
-    let auto = root.querySelector(`#${id}`);
-    if (!auto) {
-      auto = root.appendChild(document.createElement("span"));
-      auto.id = id;
-      auto.classList.add("auto");
-      auto.textContent = esp;
-      auto.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (autoIds.has(id)) {
-          autoIds.delete(id);
-          auto.style.color = "gray";
-        } else {
-          autoIds.add(id);
-          auto.style.color = "green";
-        }
-        setStrSet("autoIds", autoIds);
-      }
-    }
-    if (autoIds.has(id)) {
-      auto.style.color = "green";
-    } else {
-      auto.style.color = "gray";
-    }
-  }
 }
 
 async function save() {
@@ -173,23 +94,6 @@ async function save() {
 
 /**
   * @param {string} key
-  * @param {number} defaultVal
-  */
-function useInt(key, defaultVal) {
-  let text = localStorage.getItem(key);
-  let val = text ? parseInt(text) : defaultVal;
-  return [
-    () => val,
-    /** @type {(val: number) => void} */
-    (v) => {
-      val = v;
-      localStorage.setItem(key, v.toString());
-    }
-  ];
-}
-
-/**
-  * @param {string} key
   */
 function getInt(key) {
   const val = localStorage.getItem(key);
@@ -202,20 +106,7 @@ function getInt(key) {
 function setInt(key, val) {
   localStorage.setItem(key, val)
 }
-/**
-  * @param {string} key
-  */
-function getStrSet(key) {
-  const val = localStorage.getItem(key);
-  if (val !== null) return new Set(val.split(","));
-}
-/**
-  * @param {string} key
-  * @param {Set<string>} val
-  */
-function setStrSet(key, val) {
-  localStorage.setItem(key, [...val.keys()].join(","))
-}
+
 /**
   * @param {string} key
   */
