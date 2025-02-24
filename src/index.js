@@ -149,7 +149,7 @@ export function mainVue(){
             async loadExportCloud() {
                 const name = localStorage.getItem('name');
                 if (!name) return;
-                const res = await fetch(`/saves/${name}`);
+                const res = await fetch(`/saves/${name}`, { headers: { limit: "16" } });
                 if (!res.ok) return;
                 const saves = await res.json();
                 const savePrompts = saves.map((s, i) => `${i}: ${new Date(s.created_at)}`).slice(-16).join('\n');
