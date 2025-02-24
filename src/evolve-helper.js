@@ -35,97 +35,10 @@ export function evoHelper() {
           return [];
         }
       });
-      menuBtn(versionLogEl, "autoRun", "bool", true, (val) => {
-        if (val) {
-          autoTimer = setInterval(auto, getInt("autoInterval") ?? 100);
-          scanTimer = setInterval(scan, getInt("scanInterval") ?? 1000);
-        } else {
-          clearInterval(autoTimer);
-          clearInterval(scanTimer);
-          autoTimer = undefined;
-          scanTimer = undefined;
-        }
-      });
-      menuBtn(versionLogEl, "autoAll", "bool", false);
-      menuBtn(versionLogEl, "clearAll", "bool", false, (val) => {
-        if (val) {
-          autoIds.clear();
-          setStrSet('autoIds', autoIds);
-        }
-      });
-      menuBtn(versionLogEl, "autoHidden", "bool", false);
-    }
-    for (const node of document.querySelectorAll("div.action.vb")) {
-      if (node.id.startsWith("tech-")) continue;
-      if (node.id.startsWith("genes-")) continue;
-      autoBtn(node, node.firstChild);
-    }
-    for (const node of document.querySelectorAll("div.resource.crafted")) {
-      if (node.style.display === "none") continue;
-      autoBtn(node, node.firstChild);
-    }
-    for (const node of document.getElementById("market")?.querySelectorAll("div.market-item") ?? []) {
-      if (node.style.display === "none") continue;
-      for (const type of ['buy', 'sell']) {
-        const span = node.querySelector('span.' + type);
-        if (!span) continue;
-        autoBtn(span, span, node.id + '-' + type);
-      }
-    }
-    for (const gov of [0, 1, 2]) {
-      const id = `gov${gov}`;
-      const el = document.getElementById(id);
-      if (!el) continue;
-      for (const esp of ['influence', 'sabotage', 'incite']) {
-        autoCBtn(el, gov, esp);
-      }
     }
   }
 
   function auto() {
-    if (!getBool("autoRun")) return;
-    if (getBool("autoAll")) {
-      for (const node of document.querySelectorAll("div.action.vb")) {
-        if (node.classList.contains("cna")) continue;
-        const a = node.querySelector("a.button");
-        if (a) a.click();
-      }
-    }
-    for (const id of autoIds) {
-      for (const type of ['buy', 'sell']) {
-        if (id.endsWith('-' + type)) {
-          const el = document.getElementById(id.slice(0, -type.length - 1));
-          if (!el) continue;
-          const prev = el.querySelector('span.' + type);
-          if (!prev) continue;
-          prev.nextElementSibling.click();
-        }
-      }
-      if (id.startsWith('gov-')) {
-        const f = id.slice('gov-'.length);
-        if (f.startsWith("s_")) continue;
-        const [istr, esp] = f.split("_");
-        const i = parseInt(istr);
-        govCivics('t_spy', i);
-        govCivics('s_' + esp, i);
-        continue;
-      }
-      const [action, type] = id.split('-');
-      if (action && type) {
-        const c_action = actions[action][type];
-        if (localStorage.getItem("autoHidden") && c_action) {
-          if (checkTechQualifications(c_action, type)) {
-            runAction(c_action, action, type);
-          }
-          continue;
-        }
-      }
-      const el = document.getElementById(id);
-      if (!el || el.classList.contains("cna")) continue;
-      /** @type {HTMLElement} */
-      const a = el.querySelector("a.button,a:has(span[data-val='A'])");
-      a?.click();
-    }
   }
 
   /**
